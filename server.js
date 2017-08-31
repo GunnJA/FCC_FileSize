@@ -13,7 +13,7 @@ const mongo = require('mongodb').MongoClient
 app.use(express.static('public'));
 
 //mongoose.Promise = global.Promise;
-mongo.connect("mongodb://127.0.0.1:27017/myNewDB");
+mongo.connect("mongodb://192.169.0.5:3000/myNewDB");
 
 const db = mongo.connection;
 // http://expressjs.com/en/starter/basic-routing.html
