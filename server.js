@@ -16,6 +16,7 @@ app.use(express.static('public'));
 mongo.connect("mongodb://192.169.0.5:3000/myNewDB");
 
 const db = mongo.connection;
+const followers = await User.aggregate(aggregateQuery).exec();
 // http://expressjs.com/en/starter/basic-routing.html
 app.get("/", function (request, response) {
   response.sendFile(__dirname + '/views/index.html');
