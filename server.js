@@ -13,10 +13,13 @@ const mongo = require('mongodb').MongoClient
 app.use(express.static('public'));
 
 //mongoose.Promise = global.Promise;
-mongo.connect("mongodb://192.169.0.5:3000/myNewDB");
+mongo.connect("mongodb://GunnJA:klitter10@ds123124.mlab.com:23124/fccmongo",(err, database) => {
+  if (err) throw err
+  console.log(database);
+});
 
-const db = mongo.connection;
-const followers = await User.aggregate(aggregateQuery).exec();
+//const db = mongo.connection;
+//const followers = await User.aggregate(aggregateQuery).exec();
 // http://expressjs.com/en/starter/basic-routing.html
 app.get("/", function (request, response) {
   response.sendFile(__dirname + '/views/index.html');
