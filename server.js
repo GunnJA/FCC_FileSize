@@ -15,7 +15,18 @@ app.use(express.static('public'));
 //mongoose.Promise = global.Promise;
 mongo.connect("mongodb://gunnja:gunnja@ds123124.mlab.com:23124/fccmongo",(err, database) => {
   if (err) return console.log(err)
+
   console.log(database);
+});
+
+const db = mongo.connection;
+
+db.on("error", (err) => {
+	console.error(`connection error: ${err}`);
+});
+
+db.once("open", () =>{
+	console.log("db connection successful");
 });
 
 //const db = mongo.connection;
