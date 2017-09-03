@@ -6,6 +6,7 @@ const express = require('express');
 const app = express();
 const mongo = require('mongodb').MongoClient
 const url = require('url');
+let collect;
 
 let insObj = {
   'quickID' : 1,
@@ -15,16 +16,18 @@ let insObj = {
 function dbInsert(collection,data) {
   collection.insert(data, function(err, data) {
     if (err) throw err
-    console.log(data);
   })
 }
 
 function dbQuery(collection,searchPath) {
   let result = collection.find({
     path : searchPath
-  })
+  }).toArray(function(err, documents) {
+      if (err) throw err
+    })
   return result;
 }
+
 
 // http://expressjs.com/en/starter/static-files.html
 app.use(express.static('public'));
@@ -33,14 +36,13 @@ app.use(express.static('public'));
 mongo.connect("mongodb://gunnja:gunnja@ds123124.mlab.com:23124/fccmongo",(err, db) => {
   if (err) throw err
   else console.log("db connection successful")
+  collect = db.collection('myColl');
   
 // remove all entries 
 //collect.remove()
 //  db.close();
 });
 
-const db = mongo.connection;
-const collect = db.collection('myColl');
 
 //const db = mongo.connection;
 //const followers = await User.aggregate(aggregateQuery).exec();
@@ -49,25 +51,10 @@ app.get("/*", function (req, res) {
   let exists = dbQuery(collect,req.path);
   if (!exists) {
     dbInsert(collect,insObj)
+  } else {
+    console.log(exists);
   }
 });
-
-app.get("/dreams", function (request, response) {
-  response.send(dreams);
-});
-
-// could also use the POST body instead of query string: http://expressjs.com/en/api.html#req.body
-app.post("/dreams", function (request, response) {
-  dreams.push(request.query.dream);
-  response.sendStatus(200);
-});
-
-// Simple in-memory store for now
-var dreams = [
-  "Find and count some sheep",
-  "Climb a really tall mountain",
-  "Wash the dishes"
-];
 
 // listen for requests :)
 var listener = app.listen(process.env.PORT, function () {
