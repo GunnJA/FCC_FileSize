@@ -18,10 +18,19 @@ mongo.connect("mongodb://gunnja:gunnja@ds123124.mlab.com:23124/fccmongo",(err, d
   if (err) throw err
   else console.log("db connection successful")
   var collect = db.collection('myColl');
-  collect.insert(insObj, function(err, data) {
-  if (err) throw err
-    console.log(data);
-  })
+
+//
+// to display all entries  
+//  collect.find({
+//    }, {
+//      path1: 1
+//    , _id: 1
+//    }).toArray(function(err, documents) {
+//      console.log(documents);
+//    })
+//  
+// remove all entries 
+//collect.remove()
   db.close();
 });
 
