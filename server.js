@@ -15,19 +15,12 @@ app.use(express.static('public'));
 //mongoose.Promise = global.Promise;
 mongo.connect("mongodb://gunnja:gunnja@ds123124.mlab.com:23124/fccmongo",(err, database) => {
   if (err) return console.log(err)
-
+  else console.log("db connection successful")
+  var collect = db.collection('myColl');
+  collect.insert(jsonObj, function(err, data) {
   console.log(database);
 });
 
-const db = mongo.connection;
-
-db.on("error", (err) => {
-	console.error(`connection error: ${err}`);
-});
-
-db.once("open", () =>{
-	console.log("db connection successful");
-});
 
 //const db = mongo.connection;
 //const followers = await User.aggregate(aggregateQuery).exec();
