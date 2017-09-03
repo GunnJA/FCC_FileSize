@@ -45,7 +45,7 @@ mongo.connect("mongodb://gunnja:gunnja@ds123124.mlab.com:23124/fccmongo",(err, d
 // http://expressjs.com/en/starter/basic-routing.html
 app.get("/*", function (req, res) {
   let insObj = {
-  'quickID' : 1,
+  'quickID' : collect.count({}) + 1,
   'path' : req.path
   }
   let exists = dbQuery(collect,req.path,function(num) {
@@ -61,3 +61,11 @@ app.get("/*", function (req, res) {
 var listener = app.listen(process.env.PORT, function () {
   console.log('Your app is listening on port ' + listener.address().port);
 });
+
+var get_count = function(collection, cb){
+  collection.find(query.params, query.options).count(function (e, count) {
+      console.log(count);
+      return cb(e, count);
+    });
+  });
+};
