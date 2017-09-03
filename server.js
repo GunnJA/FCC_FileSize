@@ -5,20 +5,24 @@
 const express = require('express');
 const app = express();
 const mongo = require('mongodb').MongoClient
+let insObj = {
+  'path1' : 'http://www.google.com'
+}
 
-// we've started you off with Express, 
-// but feel free to use whatever libs or frameworks you'd like through `package.json`.
 
 // http://expressjs.com/en/starter/static-files.html
 app.use(express.static('public'));
 
-//mongoose.Promise = global.Promise;
-mongo.connect("mongodb://gunnja:gunnja@ds123124.mlab.com:23124/fccmongo",(err, database) => {
-  if (err) return console.log(err)
+
+mongo.connect("mongodb://gunnja:gunnja@ds123124.mlab.com:23124/fccmongo",(err, db) => {
+  if (err) throw err
   else console.log("db connection successful")
   var collect = db.collection('myColl');
-  collect.insert(jsonObj, function(err, data) {
-  console.log(database);
+  collect.insert(insObj, function(err, data) {
+  if (err) throw err
+    console.log(data);
+  })
+  db.close();
 });
 
 
