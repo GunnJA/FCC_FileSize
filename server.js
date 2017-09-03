@@ -20,16 +20,12 @@ function dbInsert(collection,data) {
 }
 
 function dbQuery(collection,searchPath) {
-  let result
-  collection.find({
+  let result = collection.find({
     path : { $eq: searchPath }
-  }).toArray(function(err, documents) {
-
-    result = documents
-        
-  }).next()
-  console.log(result)
-  return result
+  })
+  result = result.toArray(function(err, documents) {
+  return result;
+  })
 }
 
 
