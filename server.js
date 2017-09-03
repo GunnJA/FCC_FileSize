@@ -9,6 +9,11 @@ let insObj = {
   'path1' : 'http://www.google.com'
 }
 
+funct
+//  collect.insert(insObj, function(err, data) {
+//  if (err) throw err
+//    console.log(data);
+//  })
 
 // http://expressjs.com/en/starter/static-files.html
 app.use(express.static('public'));
