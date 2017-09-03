@@ -6,14 +6,24 @@ const express = require('express');
 const app = express();
 const mongo = require('mongodb').MongoClient
 let insObj = {
-  'path1' : 'http://www.google.com'
+  'path' : 'path1',
+  'url' : 'http://www.google.com'
 }
 
-funct
-//  collect.insert(insObj, function(err, data) {
-//  if (err) throw err
-//    console.log(data);
-//  })
+function dbInsert(collection,data) {
+  collection.insert(data, function(err, data) {
+    if (err) throw err
+    console.log(data);
+  })
+}
+
+function dbQuery(collection,searchPath) {
+  collection.find({
+    path : searchPath
+  })
+    console.log(data);
+  })
+}
 
 // http://expressjs.com/en/starter/static-files.html
 app.use(express.static('public'));
