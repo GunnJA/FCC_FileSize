@@ -23,8 +23,8 @@ function dbQuery(collection,searchPath) {
   let result = collection.find({
     path : { $eq: searchPath }
   })
-  result = result.toArray(function(err, documents) {
-  return result;
+  return result.toArray(function(err, documents) {
+    return documents;
   })
 }
 
