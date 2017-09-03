@@ -20,11 +20,14 @@ function dbInsert(collection,data) {
 }
 
 function dbQuery(collection,searchPath) {
+  let result;
   collection.find({
     path : { $eq: searchPath }
   }).toArray(function(err, documents) {
-      return documents;
-    })
+    console.log(documents)
+    result = documents
+  })
+  return result
 }
 
 
@@ -49,8 +52,8 @@ mongo.connect("mongodb://gunnja:gunnja@ds123124.mlab.com:23124/fccmongo",(err, d
 app.get("/*", function (req, res) {
   let exists = dbQuery(collect,req.path);
   if (!exists) {
-    console.log("if",exists);
-    dbInsert(collect,insObj)
+    console.log("if",dbQuery(collect,req.path))
+    //dbInsert(collect,insObj)
   } else {
     console.log("else",exists);
   }
