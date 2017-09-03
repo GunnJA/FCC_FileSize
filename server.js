@@ -8,10 +8,7 @@ const mongo = require('mongodb').MongoClient
 const url = require('url');
 let collect;
 
-let insObj = {
-  'quickID' : 1,
-  'path' : '/http://www.google.com'
-}
+
 
 function dbInsert(collection,data) {
   collection.insert(data, function(err, data) {
@@ -19,12 +16,11 @@ function dbInsert(collection,data) {
   })
 }
 
-function dbQuery(collection,searchPath) {
-  let result = collection.find({
+function dbQuery(collection,searchPath,cb) {
+  collection.find({
     path : { $eq: searchPath }
-  })
-  return result.toArray(function(err, documents) {
-    return documents;
+  }).toArray(function(err, documents) {
+    cb(documents.length);
   })
 }
 
@@ -48,13 +44,17 @@ mongo.connect("mongodb://gunnja:gunnja@ds123124.mlab.com:23124/fccmongo",(err, d
 //const followers = await User.aggregate(aggregateQuery).exec();
 // http://expressjs.com/en/starter/basic-routing.html
 app.get("/*", function (req, res) {
-  let exists = dbQuery(collect,req.path);
-  if (!exists) {
-    console.log("if",dbQuery(collect,req.path))
-    //dbInsert(collect,insObj)
-  } else {
-    console.log("else",exists);
+  let insObj = {
+  'quickID' : 1,
+  'path' : req.path
   }
+  let exists = dbQuery(collect,req.path,function(num) {
+    if (num > 0) {
+      console.log("already exists")
+    }
+    else {
+      dbInsert(collect,insObj);
+    }});
 });
 
 // listen for requests :)
