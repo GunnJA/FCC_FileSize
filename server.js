@@ -9,7 +9,7 @@ const url = require('url');
 
 let insObj = {
   'quickID' : 1,
-  'path' : 'http://www.google.com'
+  'path' : '/http://www.google.com'
 }
 
 function dbInsert(collection,data) {
@@ -33,22 +33,23 @@ app.use(express.static('public'));
 mongo.connect("mongodb://gunnja:gunnja@ds123124.mlab.com:23124/fccmongo",(err, db) => {
   if (err) throw err
   else console.log("db connection successful")
-  var collect = db.collection('myColl');
-
-
+  
 // remove all entries 
 //collect.remove()
-  db.close();
+//  db.close();
 });
 
+const db = mongo.connection;
+const collect = db.collection('myColl');
 
 //const db = mongo.connection;
 //const followers = await User.aggregate(aggregateQuery).exec();
 // http://expressjs.com/en/starter/basic-routing.html
 app.get("/*", function (req, res) {
-  console.log(req);
-  res.sendFile(__dirname + '/views/index.html');
-  console.log(req.path);
+  let exists = dbQuery(collect,req.path);
+  if (!exists) {
+    dbInsert(collect,insObj)
+  }
 });
 
 app.get("/dreams", function (request, response) {
