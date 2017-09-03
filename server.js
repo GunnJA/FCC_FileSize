@@ -5,9 +5,11 @@
 const express = require('express');
 const app = express();
 const mongo = require('mongodb').MongoClient
+const url = require('url');
+
 let insObj = {
-  'path' : 'path1',
-  'url' : 'http://www.google.com'
+  'quickID' : 1,
+  'path' : 'http://www.google.com'
 }
 
 function dbInsert(collection,data) {
@@ -18,11 +20,10 @@ function dbInsert(collection,data) {
 }
 
 function dbQuery(collection,searchPath) {
-  collection.find({
+  let result = collection.find({
     path : searchPath
   })
-    console.log(data);
-  })
+  return result;
 }
 
 // http://expressjs.com/en/starter/static-files.html
@@ -34,16 +35,7 @@ mongo.connect("mongodb://gunnja:gunnja@ds123124.mlab.com:23124/fccmongo",(err, d
   else console.log("db connection successful")
   var collect = db.collection('myColl');
 
-//
-// to display all entries  
-//  collect.find({
-//    }, {
-//      path1: 1
-//    , _id: 1
-//    }).toArray(function(err, documents) {
-//      console.log(documents);
-//    })
-//  
+
 // remove all entries 
 //collect.remove()
   db.close();
@@ -53,8 +45,10 @@ mongo.connect("mongodb://gunnja:gunnja@ds123124.mlab.com:23124/fccmongo",(err, d
 //const db = mongo.connection;
 //const followers = await User.aggregate(aggregateQuery).exec();
 // http://expressjs.com/en/starter/basic-routing.html
-app.get("/", function (request, response) {
-  response.sendFile(__dirname + '/views/index.html');
+app.get("/*", function (req, res) {
+  console.log(req);
+  res.sendFile(__dirname + '/views/index.html');
+  console.log(req.path);
 });
 
 app.get("/dreams", function (request, response) {
