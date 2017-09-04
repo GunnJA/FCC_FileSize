@@ -60,11 +60,11 @@ mongo.connect("mongodb://gunnja:gunnja@ds123124.mlab.com:23124/fccmongo",(err, d
   
 // remove all entries 
 //collect.remove()
-//  db.close();
+// db.close();
 });
 
 
-app.get(/^(http\:\/\/|https\:\/\/).+/, function (req, res) {
+app.get(/^\/(http\:\/\/|https\:\/\/).+/, function (req, res) {
   let exists = dbExists(collect,req.path,function(num) {
     console.log("dbExists:",num);
     if (num > 0) {
