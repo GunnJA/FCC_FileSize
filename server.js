@@ -47,6 +47,7 @@ app.get("/*", function (req, res) {
       console.log("already exists")
     }
     else {
+      let insObj = createObj(collect, req, function())
       dbInsert(collect,createObj(collect, req));
     }});
 });
@@ -65,8 +66,9 @@ function get_count(collection, cb){
 };
 
 function createObj(collection, req, cb) {
-  return {
+  let obj = {
   'quickID' : get_count(collection),
   'path' : req.path
   }
+  cb(obj);
 }
