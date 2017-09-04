@@ -83,7 +83,7 @@ app.get(/^(http\:\/\/|https\:\/\/).+/, function (req, res) {
 app.get(/\d+/, function (req, res) {
   dbFind(collect,req.path,function(path) {
     if (path) {
-      console.log("getPath:", path)
+      res.redirect(path.substring(1));
     } else {
     console.log("getPath:", "error")
     }  
