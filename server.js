@@ -48,12 +48,12 @@ app.get("/*", function (req, res) {
       console.log("already exists")
     }
     else {
-      createObj(collect, req, function(collection, obj) {
+      getCount(collect,req, createObj(collection, req, function(collection, obj) {
         console.log("new entry");
         dbInsert(collection, obj);
         console.log(obj);
-      })
-    }});
+      }))
+    }
 });
 
 // listen for requests :)
@@ -61,16 +61,17 @@ var listener = app.listen(process.env.PORT, function () {
   console.log('Your app is listening on port ' + listener.address().port);
 });
 
-function get_count(collection){
-  return collection.find().count();
-};
+function getCount(collection, req, cb) {
+  let count = collection.find().count();
+  console.log("getCount",count);
+  cb(collection, req, count);
+}
 
-function createObj(collection, req, cb, countFun) {
-  let count = countFun(collection);
+function createObj(collection, req, count, cb) {
   let obj = {
-  'quickID' : get_count(collection),
+  'quickID' : count,
   'path' : req.path
   }
-  console.log("co",obj);
+  console.log("createObj",obj);
   cb(collection, obj);
 }
