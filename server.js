@@ -43,11 +43,13 @@ mongo.connect("mongodb://gunnja:gunnja@ds123124.mlab.com:23124/fccmongo",(err, d
 app.get("/*", function (req, res) {
 
   let exists = dbQuery(collect,req.path,function(num) {
+    console.log("dbQuery:",num);
     if (num > 0) {
       console.log("already exists")
     }
     else {
       createObj(collect, req, function(collection, obj) {
+        console.log("new entry");
         dbInsert(collection, obj);
         console.log(obj);
       })
@@ -59,17 +61,14 @@ var listener = app.listen(process.env.PORT, function () {
   console.log('Your app is listening on port ' + listener.address().port);
 });
 
-function get_count(collection, cb){
-  collection.find().count(function (e, count) {
-      console.log(count);
-    return count + 1;
-      //return cb(count);
-    });
+function get_count(collection){
+  return collection.find().count();
 };
 
-function createObj(collection, req, cb) {
+function createObj(collection, req, cb, countFun) {
+  let count = countFun(collection);
   let obj = {
-  'quickID' : get_count(collection, ),
+  'quickID' : get_count(collection),
   'path' : req.path
   }
   console.log("co",obj);
