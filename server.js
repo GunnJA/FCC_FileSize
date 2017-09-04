@@ -40,20 +40,14 @@ mongo.connect("mongodb://gunnja:gunnja@ds123124.mlab.com:23124/fccmongo",(err, d
 });
 
 
-//const db = mongo.connection;
-//const followers = await User.aggregate(aggregateQuery).exec();
-// http://expressjs.com/en/starter/basic-routing.html
 app.get("/*", function (req, res) {
-  let insObj = {
-  'quickID' : get_count(collect, function(count) {return count + 1}),
-  'path' : req.path
-  }
+
   let exists = dbQuery(collect,req.path,function(num) {
     if (num > 0) {
       console.log("already exists")
     }
     else {
-      dbInsert(collect,insObj);
+      dbInsert(collect,createObj(collect, req));
     }});
 });
 
@@ -62,10 +56,17 @@ var listener = app.listen(process.env.PORT, function () {
   console.log('Your app is listening on port ' + listener.address().port);
 });
 
-var get_count = function(collection, cb){
+function get_count(collection, cb){
   collection.find().count(function (e, count) {
       console.log(count);
-    return count + 1
+    return count + 1;
       //return cb(count);
     });
 };
+
+function createObj(collection, req, cb) {
+  return {
+  'quickID' : get_count(collection),
+  'path' : req.path
+  }
+}
