@@ -65,6 +65,7 @@ var listener = app.listen(process.env.PORT, function () {
 var get_count = function(collection, cb){
   collection.find().count(function (e, count) {
       console.log(count);
-      return cb(count);
+    return count + 1
+      //return cb(count);
     });
 };
