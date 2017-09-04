@@ -25,11 +25,12 @@ function dbExists(collection,searchPath,cb) {
 }
 
 function dbFind(collection,id,cb) {
-  let idNum = id.split("")
+  let idNum = id.split("/")[1];
   collection.find({
-    quickID : { $eq: id }
+    quickID : { $eq: idNum }
   }).toArray(function(err, documents) {
-    cb(documents[0][path]);
+    console.log("docs",documents);
+    cb(documents[0].path);
   })
 }
 
@@ -63,7 +64,7 @@ mongo.connect("mongodb://gunnja:gunnja@ds123124.mlab.com:23124/fccmongo",(err, d
 });
 
 
-app.get("/*", function (req, res) {
+app.get(/^(http\:\/\/|https\:\/\/).+/, function (req, res) {
   let exists = dbExists(collect,req.path,function(num) {
     console.log("dbExists:",num);
     if (num > 0) {
@@ -80,7 +81,14 @@ app.get("/*", function (req, res) {
 })
   
 app.get(/\d+/, function (req, res) {
-  dbFind(collect,req.path,cb)
+  dbFind(collect,req.path,function(path) {
+    if (path) {
+      console.log("getPath:", path)
+    } else {
+    console.log("getPath:", "error")
+    }  
+  })
+})
 
 // listen for requests :)
 var listener = app.listen(process.env.PORT, function () {
