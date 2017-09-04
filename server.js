@@ -25,9 +25,9 @@ function dbExists(collection,searchPath,cb) {
 }
 
 function dbFind(collection,id,cb) {
-  let idNum = id.split("/")[1];
+  let idNum = id.substring(1);
   collection.find({
-    quickID : { $eq: idNum }
+    quickID : { $eq: parseInt(idNum) }
   }).toArray(function(err, documents) {
     console.log("docs",documents);
     cb(documents[0].path);
