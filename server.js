@@ -48,26 +48,32 @@ app.get("/*", function (req, res) {
       console.log("already exists")
     }
     else {
-      getCount(collect,req, createObj(collection, req, function(collection, obj) {
+      getCount(collect,req, createObj,function(collection, obj) {
         console.log("new entry");
         dbInsert(collection, obj);
         console.log(obj);
-      }))
+      })
     }
-});
+  })
+})
+  
 
 // listen for requests :)
 var listener = app.listen(process.env.PORT, function () {
   console.log('Your app is listening on port ' + listener.address().port);
 });
 
-function getCount(collection, req, cb) {
+function getCount(collection, req, cb1, cb2) {
+  collection.find({}).toArray(function(err, documents) {
+    cb1(collection, req, documents.length, cb2);
+  })
+  
   let count = collection.find().count();
   console.log("getCount",count);
-  cb(collection, req, count);
+  cb1(collection, req, count, cb2);
 }
 
-function createObj(collection, req, count, cb) {
+let createObj = function(collection, req, count, cb) {
   let obj = {
   'quickID' : count,
   'path' : req.path
