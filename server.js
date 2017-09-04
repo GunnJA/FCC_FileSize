@@ -9,7 +9,7 @@ const url = require('url');
 let collect;
 
 
-
+// functions
 function dbInsert(collection,data) {
   collection.insert(data, function(err, data) {
     if (err) throw err
@@ -49,6 +49,8 @@ let createObj = function(collection, req, count, cb) {
   cb(collection, obj);
 }
 
+
+
 // http://expressjs.com/en/starter/static-files.html
 app.use(express.static('public'));
 
@@ -57,13 +59,10 @@ mongo.connect("mongodb://gunnja:gunnja@ds123124.mlab.com:23124/fccmongo",(err, d
   if (err) throw err
   else console.log("db connection successful")
   collect = db.collection('myColl');
-  
-// remove all entries 
-//collect.remove()
 // db.close();
 });
 
-
+// Get new urls
 app.get(/^\/(http\:\/\/|https\:\/\/).+/, function (req, res) {
   let exists = dbExists(collect,req.path,function(num) {
     console.log("dbExists:",num);
@@ -80,6 +79,7 @@ app.get(/^\/(http\:\/\/|https\:\/\/).+/, function (req, res) {
   })
 })
   
+// Redirect existing shortened urls
 app.get(/\d+/, function (req, res) {
   dbFind(collect,req.path,function(path) {
     if (path) {
