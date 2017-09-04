@@ -16,7 +16,7 @@ function dbInsert(collection,data) {
   })
 }
 
-function dbQuery(collection,searchPath,cb) {
+function dbExists(collection,searchPath,cb) {
   collection.find({
     path : { $eq: searchPath }
   }).toArray(function(err, documents) {
@@ -24,6 +24,29 @@ function dbQuery(collection,searchPath,cb) {
   })
 }
 
+function dbFind(collection,id,cb) {
+  let idNum = id.split("")
+  collection.find({
+    quickID : { $eq: id }
+  }).toArray(function(err, documents) {
+    cb(documents[0][path]);
+  })
+}
+
+function getCount(collection, req, cb1, cb2) {
+  collection.find({}).toArray(function(err, documents) {
+    cb1(collection, req, documents.length, cb2);
+  })
+}
+  
+let createObj = function(collection, req, count, cb) {
+  let obj = {
+  'quickID' : count,
+  'path' : req.path
+  }
+  console.log("createObj",obj);
+  cb(collection, obj);
+}
 
 // http://expressjs.com/en/starter/static-files.html
 app.use(express.static('public'));
@@ -41,9 +64,8 @@ mongo.connect("mongodb://gunnja:gunnja@ds123124.mlab.com:23124/fccmongo",(err, d
 
 
 app.get("/*", function (req, res) {
-
-  let exists = dbQuery(collect,req.path,function(num) {
-    console.log("dbQuery:",num);
+  let exists = dbExists(collect,req.path,function(num) {
+    console.log("dbExists:",num);
     if (num > 0) {
       console.log("already exists")
     }
@@ -57,27 +79,11 @@ app.get("/*", function (req, res) {
   })
 })
   
+app.get(/\d+/, function (req, res) {
+  dbFind(collect,req.path,cb)
 
 // listen for requests :)
 var listener = app.listen(process.env.PORT, function () {
   console.log('Your app is listening on port ' + listener.address().port);
 });
 
-function getCount(collection, req, cb1, cb2) {
-  collection.find({}).toArray(function(err, documents) {
-    cb1(collection, req, documents.length, cb2);
-  })
-  
-  let count = collection.find().count();
-  console.log("getCount",count);
-  cb1(collection, req, count, cb2);
-}
-
-let createObj = function(collection, req, count, cb) {
-  let obj = {
-  'quickID' : count,
-  'path' : req.path
-  }
-  console.log("createObj",obj);
-  cb(collection, obj);
-}
