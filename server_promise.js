@@ -17,12 +17,12 @@ function dbInsert(collection,data) {
   })
 }
 
-function dbExists(collection,searchPath) {
+function dbExists(collection,searchPath,req) {
   return new Promise(function(resolve, reject) {
     collection.find({
       path : { $eq: searchPath }
     }).toArray(function(err, documents) {
-      resolve(documents.length).next(function() {
+      resolve(documents.length).next(function(num) {
         console.log("dbExists:",num);
       if (num > 0) {
         console.log("already exists");
@@ -87,15 +87,7 @@ mongo.connect("mongodb://gunnja:gunnja@ds123124.mlab.com:23124/fccmongo",(err, d
 
 // Get new urls
 app.get(/^\/(http\:\/\/|https\:\/\/).+/, function (req, res) {
-  let exists = dbExists(collect,req.path,function(num) {
-    console.log("dbExists:",num);
-    if (num > 0) {
-      console.log("already exists");
-      database.close;
-    } else {
-      getCount(collect,req, createObj)
-    }
-  })
+  let exists = dbExists(collect,req.path,req)
 })
   
 // Redirect existing shortened urls
