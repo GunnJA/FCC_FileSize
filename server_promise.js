@@ -50,17 +50,15 @@ function dbFind(collection,id) {
 function getCount(collection, req) {
   return new Promise(function(resolve, reject) {
     collection.find({}).toArray(function(err, documents) {
-      resolve(documents.length).then(function(collection, obj) {
+      resolve(documents.length).then(createObj(count,req)).then(function(collection, obj) {
         console.log("new entry");
         dbInsert(collection, obj);
         console.log(obj);
         database.close;
       });
-    });
-  });
 }
   
-let createObj = function(collection, req, count) {
+function createObj(count,req) {
   return new Promise(function(resolve, reject) {
     let obj = {
     'quickID' : count,
