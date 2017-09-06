@@ -20,9 +20,7 @@ function dbInsert(collection,data) {
 function dbFind(collection,id) {
   return new Promise(function(resolve, reject) {
     let idNum = id.substring(1);
-    collection.find({
-      quickID : { $eq: parseInt(idNum) }
-    }).toArray(function(err, documents) {
+    finder(collection,{ quickID : { $eq: parseInt(idNum) }}).toArray(function(err, documents) {
       console.log("docs",documents);
       resolve(documents[0].path);
     });
@@ -61,8 +59,6 @@ function handler(collection, req, queryObj) {
 		}
 	})
 }
-
-
 
 // http://expressjs.com/en/starter/static-files.html
 app.use(express.static('public'));
