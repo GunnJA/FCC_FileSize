@@ -49,13 +49,11 @@ function dbFind(collection,id) {
 
 function getCount(collection, req, queryObj) {
   return new Promise(function(resolve, reject) {
-    collection.find(queryObj).toArray(function(err, documents) {
+    if (queryObj === {}) {
+      collection.find(queryObj).toArray(function(err, documents) {
       resolve(documents.length).then(function(count) {
         return new Promise(function(resolve, reject) {
-          let obj = {
-          'quickID' : count,
-          'path' : req.path
-          }
+          let obj = {'quickID' : count, 'path' : req.path};
           console.log("createObj",obj);
           resolve(obj);
         });
