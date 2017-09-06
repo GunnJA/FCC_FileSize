@@ -29,38 +29,37 @@ function dbFind(collection,id) {
   });
 }
 
+function finder(collection, queryObj) {
+    return collection.find(queryObj).size();
+}
+
 function handler(collection, req, queryObj) {
-  return new Promise(function(resolve, reject) {
-    if (queryObj === {}) {
-      collection.find(queryObj).toArray(function(err, documents) {
-        resolve(documents.length).then(function(count) {
-          return new Promise(function(resolve, reject) {
-            let obj = {'quickID' : count, 'path' : req.path};
-            console.log("createObj",obj);
-            resolve(obj);
-          });
-        }).then(function(collection, obj) {
-          console.log("new entry");
-          dbInsert(collection, obj);
-          console.log(obj);
-          database.close;
-        });
-      });
-    } else {
-      collection.find(queryObj).toArray(function(err, documents) {
-        console.log(documents.length);
-        resolve(documents.length).then(function(num) {
-          console.log("dbExists:",num);
-          if (num > 0) {
-            console.log("already exists");
-            database.close;
-          } else {
-            return handler(collection, req, {})
-          }
-        });
-      })
-    }
-  })
+	return new Promise(function(resolve, reject) {
+		if (queryObj != {}) {
+			finder(collection, queryObj).then(function(count) {
+				console.log("dbExists:",count);
+				if (count > 0) {
+					console.log("already exists");
+					database.close;
+				} else {
+					return handler(collection, req, {})
+				}
+			});
+		} else {
+			finder(collection, queryObj).then(function(count) {
+				return new Promise(function(resolve, reject) {
+					let obj = {'quickID' : count, 'path' : req.path};
+					console.log("createObj",obj);
+					resolve(obj);
+				});
+			}).then(function(collection, obj) {
+				console.log("new entry");
+				dbInsert(collection, obj);
+				console.log(obj);
+				database.close;
+			});
+		}
+	})
 }
 
 
