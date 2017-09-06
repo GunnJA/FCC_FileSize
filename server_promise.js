@@ -17,12 +17,22 @@ function dbInsert(collection,data) {
   })
 }
 
-function dbExists(collection,searchPath,cb) {
-  collection.find({
-    path : { $eq: searchPath }
-  }).toArray(function(err, documents) {
-    cb(documents.length);
-  });
+function dbExists(collection,searchPath) {
+  return new Promise(function(resolve, reject) {
+    collection.find({
+      path : { $eq: searchPath }
+    }).toArray(function(err, documents) {
+      resolve(documents.length).next(function() {
+        console.log("dbExists:",num);
+      if (num > 0) {
+        console.log("already exists");
+        database.close;
+      } else {
+        getCount(collect,req, createObj)
+      }
+    });
+  })
+  })
 }
 
 function dbFind(collection,id) {
@@ -37,19 +47,28 @@ function dbFind(collection,id) {
   });
 }
 
-function getCount(collection, req, cb1, cb2) {
-  collection.find({}).toArray(function(err, documents) {
-    cb1(collection, req, documents.length, cb2);
+function getCount(collection, req) {
+  return new Promise(function(resolve, reject) {
+    collection.find({}).toArray(function(err, documents) {
+      resolve(documents.length).then(function(collection, obj) {
+        console.log("new entry");
+        dbInsert(collection, obj);
+        console.log(obj);
+        database.close;
+      });
+    });
   });
 }
   
-let createObj = function(collection, req, count, cb) {
-  let obj = {
-  'quickID' : count,
-  'path' : req.path
-  }
-  console.log("createObj",obj);
-  cb(collection, obj);
+let createObj = function(collection, req, count) {
+  return new Promise(function(resolve, reject) {
+    let obj = {
+    'quickID' : count,
+    'path' : req.path
+    }
+    console.log("createObj",obj);
+    resolve(obj);
+  });
 }
 
 
@@ -73,14 +92,8 @@ app.get(/^\/(http\:\/\/|https\:\/\/).+/, function (req, res) {
     if (num > 0) {
       console.log("already exists");
       database.close;
-    }
-    else {
-      getCount(collect,req, createObj,function(collection, obj) {
-        console.log("new entry");
-        dbInsert(collection, obj);
-        console.log(obj);
-        database.close;
-      })
+    } else {
+      getCount(collect,req, createObj)
     }
   })
 })
