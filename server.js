@@ -17,12 +17,20 @@ function dbInsert(collection,data) {
   })
 }
 
-function dbFind(collection,id) {
+function dbFind(collection,id,res) {
   return new Promise(function(resolve, reject) {
     let idNum = id.substring(1);
     finder(collection,{ quickID : { $eq: parseInt(idNum) }}).toArray(function(err, documents) {
       console.log("docs",documents);
-      resolve(documents[0].path);
+      resolve(documents[0].path).then(function(path) {
+    if (path) {
+      res.redirect(path.substring(1));
+      database.close;
+    } else {
+    console.log("getPath:", "error")
+      database.close;
+    }  
+  });
     });
   });
 }
@@ -85,15 +93,7 @@ app.get(/^\/(http\:\/\/|https\:\/\/).+/, function (req, res) {
   
 // Redirect existing shortened urls
 app.get(/\d+/, function (req, res) {
-  dbFind(collect,req.path,function(path) {
-    if (path) {
-      res.redirect(path.substring(1));
-      database.close;
-    } else {
-    console.log("getPath:", "error")
-      database.close;
-    }  
-  })
+  dbFind(collect,req.path,res)
 })
 
 // listen for requests :)
