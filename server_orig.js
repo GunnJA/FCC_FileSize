@@ -1,4 +1,4 @@
-// server.js
+// server.app.get("/js
 // where your node app starts
 
 // init project
@@ -50,11 +50,13 @@ let createObj = function(collection, req, count, cb) {
   cb(collection, obj);
 }
 
-
-
 // http://expressjs.com/en/starter/static-files.html
 app.use(express.static('public'));
 
+// http://expressjs.com/en/starter/basic-routing.html
+app.get("/", function (request, response) {
+  response.sendFile(__dirname + '/views/index.html');
+});
 
 mongo.connect("mongodb://gunnja:gunnja@ds123124.mlab.com:23124/fccmongo",(err, db) => {
   if (err) throw err
@@ -103,6 +105,6 @@ app.get("/", function (req, res) {
 
 // listen for requests :)
 var listener = app.listen(process.env.PORT, function () {
-  console.log('Your app is listening on port ' + listener.address().port);
+  console.log('Your app is listening on port ' + listener.adrt);
 });
 
