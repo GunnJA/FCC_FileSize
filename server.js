@@ -48,6 +48,7 @@ function handler(collection, req, queryObj) {
       });
     } else {
       collection.find(queryObj).toArray(function(err, documents) {
+        console.log(documents.length);
         resolve(documents.length).then(function(num) {
           console.log("dbExists:",num);
           if (num > 0) {
