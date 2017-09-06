@@ -17,37 +17,49 @@ function dbInsert(collection,data) {
   })
 }
 
-function dbExists(collection,searchPath,cb) {
-  collection.find({
-    path : { $eq: searchPath }
-  }).toArray(function(err, documents) {
-    cb(documents.length);
-  })
+function dbFind(collection,id) {
+  return new Promise(function(resolve, reject) {
+    let idNum = id.substring(1);
+    collection.find({
+      quickID : { $eq: parseInt(idNum) }
+    }).toArray(function(err, documents) {
+      console.log("docs",documents);
+      resolve(documents[0].path);
+    });
+  });
 }
 
-function dbFind(collection,id,cb) {
-  let idNum = id.substring(1);
-  collection.find({
-    quickID : { $eq: parseInt(idNum) }
-  }).toArray(function(err, documents) {
-    console.log("docs",documents);
-    cb(documents[0].path);
+function handler(collection, req, queryObj) {
+  return new Promise(function(resolve, reject) {
+    if (queryObj === {}) {
+      collection.find(queryObj).toArray(function(err, documents) {
+        resolve(documents.length).then(function(count) {
+          return new Promise(function(resolve, reject) {
+            let obj = {'quickID' : count, 'path' : req.path};
+            console.log("createObj",obj);
+            resolve(obj);
+          });
+        }).then(function(collection, obj) {
+          console.log("new entry");
+          dbInsert(collection, obj);
+          console.log(obj);
+          database.close;
+        });
+      });
+    } else {
+      collection.find(queryObj).toArray(function(err, documents) {
+        resolve(documents.length).then(function(num) {
+          console.log("dbExists:",num);
+          if (num > 0) {
+            console.log("already exists");
+            database.close;
+          } else {
+            return handler(collection, req, {})
+          }
+        });
+      })
+    }
   })
-}
-
-function getCount(collection, req, cb1, cb2) {
-  collection.find({}).toArray(function(err, documents) {
-    cb1(collection, req, documents.length, cb2);
-  })
-}
-  
-let createObj = function(collection, req, count, cb) {
-  let obj = {
-  'quickID' : count,
-  'path' : req.path
-  }
-  console.log("createObj",obj);
-  cb(collection, obj);
 }
 
 
@@ -66,20 +78,8 @@ mongo.connect("mongodb://gunnja:gunnja@ds123124.mlab.com:23124/fccmongo",(err, d
 
 // Get new urls
 app.get(/^\/(http\:\/\/|https\:\/\/).+/, function (req, res) {
-  let exists = dbExists(collect,req.path,function(num) {
-    console.log("dbExists:",num);
-    if (num > 0) {
-      console.log("already exists");
-      database.close;
-    }
-    else {
-      getCount(collect,req, createObj,function(collection, obj) {
-        console.log("new entry");
-        dbInsert(collection, obj);
-        console.log(obj);
-        database.close;
-      })
-    }
+  handler(collect, req, {
+    path : { $eq: req.path }
   })
 })
   
