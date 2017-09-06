@@ -30,7 +30,7 @@ function dbFind(collection,id) {
 }
 
 function finder(collection, queryObj) {
-    return collection.find(queryObj).size();
+    return collection.find(queryObj).count();
 }
 
 function handler(collection, req, queryObj) {
