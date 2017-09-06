@@ -22,7 +22,7 @@ function dbExists(collection,searchPath,req) {
     collection.find({
       path : { $eq: searchPath }
     }).toArray(function(err, documents) {
-      resolve(documents.length).next(function(num) {
+      resolve(documents.length).then(function(num) {
         console.log("dbExists:",num);
       if (num > 0) {
         console.log("already exists");
@@ -47,26 +47,26 @@ function dbFind(collection,id) {
   });
 }
 
-function getCount(collection, req) {
+function getCount(collection, req, queryObj) {
   return new Promise(function(resolve, reject) {
-    collection.find({}).toArray(function(err, documents) {
-      resolve(documents.length).then(createObj(count,req)).then(function(collection, obj) {
+    collection.find(queryObj).toArray(function(err, documents) {
+      resolve(documents.length).then(function(count) {
+        return new Promise(function(resolve, reject) {
+          let obj = {
+          'quickID' : count,
+          'path' : req.path
+          }
+          console.log("createObj",obj);
+          resolve(obj);
+        });
+      }).then(function(collection, obj) {
         console.log("new entry");
         dbInsert(collection, obj);
         console.log(obj);
         database.close;
       });
-}
-  
-function createObj(count,req) {
-  return new Promise(function(resolve, reject) {
-    let obj = {
-    'quickID' : count,
-    'path' : req.path
-    }
-    console.log("createObj",obj);
-    resolve(obj);
-  });
+    })
+  })
 }
 
 
