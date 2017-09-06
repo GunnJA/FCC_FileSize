@@ -63,6 +63,10 @@ function handler(collection, req, queryObj) {
 // http://expressjs.com/en/starter/static-files.html
 app.use(express.static('public'));
 
+// http://expressjs.com/en/starter/basic-routing.html
+app.get("/", function (request, response) {
+  response.sendFile(__dirname + '/views/index.html');
+});
 
 mongo.connect("mongodb://gunnja:gunnja@ds123124.mlab.com:23124/fccmongo",(err, db) => {
   if (err) throw err
