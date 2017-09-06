@@ -51,19 +51,32 @@ function getCount(collection, req, queryObj) {
   return new Promise(function(resolve, reject) {
     if (queryObj === {}) {
       collection.find(queryObj).toArray(function(err, documents) {
-      resolve(documents.length).then(function(count) {
-        return new Promise(function(resolve, reject) {
-          let obj = {'quickID' : count, 'path' : req.path};
-          console.log("createObj",obj);
-          resolve(obj);
-        });
-      }).then(function(collection, obj) {
+        resolve(documents.length).then(function(count) {
+          return new Promise(function(resolve, reject) {
+            let obj = {'quickID' : count, 'path' : req.path};
+            console.log("createObj",obj);
+            resolve(obj);
+          });
+        }).then(function(collection, obj) {
         console.log("new entry");
         dbInsert(collection, obj);
         console.log(obj);
         database.close;
-      });
-    })
+        });
+      })
+    } else {
+      collection.find(queryObj).toArray(function(err, documents) {
+        resolve(documents.length).then(function(num) {
+          console.log("dbExists:",num);
+          if (num > 0) {
+            console.log("already exists");
+            database.close;
+          } else {
+            return getCount(collection, req, {})
+          }
+        });
+      })
+    }
   })
 }
 
@@ -83,7 +96,9 @@ mongo.connect("mongodb://gunnja:gunnja@ds123124.mlab.com:23124/fccmongo",(err, d
 
 // Get new urls
 app.get(/^\/(http\:\/\/|https\:\/\/).+/, function (req, res) {
-  let exists = dbExists(collect,req.path,req)
+  getCount(collect, req, {
+    path : { $eq: searchPath }
+  })
 })
   
 // Redirect existing shortened urls
