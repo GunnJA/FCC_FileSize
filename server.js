@@ -30,13 +30,13 @@ function dbFind(collection,id) {
 }
 
 function finder(collection, queryObj) {
-    return collection.find(queryObj).count();
+    return collection.find(queryObj);
 }
 
 function handler(collection, req, queryObj) {
 	return new Promise(function(resolve, reject) {
 		if (queryObj != {}) {
-			finder(collection, queryObj).then(function(count) {
+			finder(collection, queryObj).count().then(function(count) {
 				console.log("dbExists:",count);
 				if (count > 0) {
 					console.log("already exists");
@@ -46,7 +46,7 @@ function handler(collection, req, queryObj) {
 				}
 			});
 		} else {
-			finder(collection, queryObj).then(function(count) {
+			finder(collection, queryObj).count().then(function(count) {
 				return new Promise(function(resolve, reject) {
 					let obj = {'quickID' : count, 'path' : req.path};
 					console.log("createObj",obj);
