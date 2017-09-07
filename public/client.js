@@ -24,3 +24,6 @@ $(function() {
   });
 
 });
+
+const $main = $("main p");
+

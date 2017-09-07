@@ -21,11 +21,10 @@ function dbFind(collection,id,res) {
   let promFind = new Promise(function(resolve, reject) {
     let idNum = id.substring(1);
     collection.findOne({ 'quickID' : { $eq: parseInt(idNum) }}, function(err, item) {
-      console.log(item);
+      if (err) throw err;
       resolve(item.path);
     });
   })
- // });
   promFind.then(function(path) {
         console.log("path",path);
         if (path) {
