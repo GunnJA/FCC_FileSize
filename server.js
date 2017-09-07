@@ -20,10 +20,13 @@ function dbInsert(collection,data) {
 function dbFind(collection,id,res) {
   let promFind = new Promise(function(resolve, reject) {
     let idNum = id.substring(1);
-    let doc = collection.findOne({ quickID : { $eq: parseInt(idNum) }});
-    console.log("docs",doc, doc.path);
-    resolve(doc.path);
-  });
+    resolve(console.log("this",collection.findOne({ 'quickID' : { $eq: parseInt(idNum) }}))
+    //console.log("this",collection.findOne({ 'quickID' : { $eq: parseInt(idNum) }}))
+    //  if (err) throw err;
+    //  console.log("docs",item, item.path);
+   // resolve(doc.path);
+    })
+ // });
   promFind.then(function(path) {
         console.log("path",path);
         if (path) {
