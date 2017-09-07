@@ -21,7 +21,7 @@ function dbFind(collection,id,res) {
   return new Promise(function(resolve, reject) {
     let idNum = id.substring(1);
     finder(collection,{ quickID : { $eq: parseInt(idNum) }}).toArray(function(err, documents) {
-      console.log("docs",documents);
+      console.log("docs",documents, documents[0].path);
       resolve(documents[0].path).then(function(path) {
         console.log("path",path);
         if (path) {
