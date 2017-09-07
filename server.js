@@ -23,14 +23,15 @@ function dbFind(collection,id,res) {
     finder(collection,{ quickID : { $eq: parseInt(idNum) }}).toArray(function(err, documents) {
       console.log("docs",documents);
       resolve(documents[0].path).then(function(path) {
-    if (path) {
-      res.redirect(path.substring(1));
-      database.close;
-    } else {
-    console.log("getPath:", "error")
-      database.close;
-    }  
-  });
+        console.log("path",path);
+        if (path) {
+          res.redirect(path.substring(1));
+          database.close;
+        } else {
+        console.log("getPath:", "error")
+          database.close;
+        }
+    });
     });
   });
 }
@@ -42,7 +43,7 @@ function finder(collection, queryObj) {
 function handler(collection, req, queryObj) {
 	return new Promise(function(resolve, reject) {
 		if (queryObj != {}) {
-			finder(collection, queryObj).count().then(function(count) {
+			resolve(finder(collection, queryObj).count()).then(function(count) {
 				console.log("dbExists:",count);
 				if (count > 0) {
 					console.log("already exists");
