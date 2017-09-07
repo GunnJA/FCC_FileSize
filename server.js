@@ -18,11 +18,13 @@ function dbInsert(collection,data) {
 }
 
 function dbFind(collection,id,res) {
-  return new Promise(function(resolve, reject) {
+  let promFind = new Promise(function(resolve, reject) {
     let idNum = id.substring(1);
-    collection.findOne({ quickID : { $eq: parseInt(idNum) }}).function(err, documents) {
-      console.log("docs",documents, documents[0].path);
-      resolve(documents[0].path).then(function(path) {
+    let doc = collection.findOne({ quickID : { $eq: parseInt(idNum) }});
+    console.log("docs",doc, doc.path);
+    resolve(doc.path);
+  });
+  promFind.then(function(path) {
         console.log("path",path);
         if (path) {
           res.redirect(path.substring(1));
@@ -32,8 +34,6 @@ function dbFind(collection,id,res) {
           database.close;
         }
     });
-    });
-  });
 }
 
 function finder(collection, queryObj) {
