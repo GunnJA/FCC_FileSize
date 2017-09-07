@@ -20,7 +20,7 @@ function dbInsert(collection,data) {
 function dbFind(collection,id,res) {
   return new Promise(function(resolve, reject) {
     let idNum = id.substring(1);
-    finder(collection,{ quickID : { $eq: parseInt(idNum) }}).toArray(function(err, documents) {
+    collection.findOne({ quickID : { $eq: parseInt(idNum) }}).function(err, documents) {
       console.log("docs",documents, documents[0].path);
       resolve(documents[0].path).then(function(path) {
         console.log("path",path);
@@ -41,32 +41,34 @@ function finder(collection, queryObj) {
 }
 
 function handler(collection, req, queryObj) {
-	return new Promise(function(resolve, reject) {
-		if (queryObj != {}) {
-			resolve(finder(collection, queryObj).count()).then(function(count) {
-				console.log("dbExists:",count);
-				if (count > 0) {
-					console.log("already exists");
-					database.close;
-				} else {
-					return handler(collection, req, {})
-				}
-			});
-		} else {
-			finder(collection, queryObj).count().then(function(count) {
-				return new Promise(function(resolve, reject) {
-					let obj = {'quickID' : count, 'path' : req.path};
-					console.log("createObj",obj);
-					resolve(obj);
-				});
-			}).then(function(collection, obj) {
-				console.log("new entry");
-				dbInsert(collection, obj);
-				console.log(obj);
+	if (queryObj != {}) {
+		let promDigit = new Promise(function(resolve, reject) {
+			resolve(finder(collection, queryObj).count());
+		});
+		promDigit.then(function(count) {
+			console.log("dbExists:",count);
+			if (count > 0) {
+				console.log("already exists");
 				database.close;
-			});
-		}
-	})
+			} else {
+				return handler(collection, req, {})
+			}
+		});
+	} else {
+		let promURL = new Promise(function(resolve, reject) {
+			resolve(finder(collection, queryObj).count())
+		});
+		promURL.then(function(count) {
+			let obj = {'quickID' : count, 'path' : req.path};
+			console.log("createObj",obj);
+			return obj;
+		}).then(function(collection, obj) {
+			console.log("new entry");
+			dbInsert(collection, obj);
+			console.log(obj);
+			database.close;
+		});
+	}
 }
 
 // http://expressjs.com/en/starter/static-files.html
