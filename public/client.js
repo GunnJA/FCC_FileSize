@@ -9,8 +9,9 @@ $(function() {
   
   $.get('/urls', function(urls) {
     console.log(urls);
-    urls.forEach(function(url) {
-      $('<li></li>').text(url).appendTo('ul#dreams');
+    $.each(urls, function(url) {
+      let pth = url.path;
+      $('<li></li>').text(pth).appendTo('ul#dreams');
     });
   });
 
