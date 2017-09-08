@@ -96,12 +96,16 @@ app.get(/^\/(http\:\/\/|https\:\/\/).+/, function (req, res) {
 })
 
 app.get("/urls", function(req, res) {
-  let urls = 
-  finder(collect,{}).toArray(function (err,data) {
-    return data
-  }
-  
-})
+  let promRetr = new Promise(function (resolve, reject) {
+    let urls = [];
+    finder(collect,{}).toArray(function (err,data) {
+      urls.push(data);
+      resolve(urls);
+    });
+  }).then(function(urls) {
+    res.send(urls);
+  })
+});
   
 // Redirect existing shortened urls
 app.get(/\d+/, function (req, res) {

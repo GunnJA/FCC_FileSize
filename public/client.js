@@ -7,9 +7,10 @@
 $(function() {
   console.log('hello world :o');
   
-  $.get('/dreams', function(dreams) {
-    dreams.forEach(function(dream) {
-      $('<li></li>').text(dream).appendTo('ul#dreams');
+  $.get('/urls', function(urls) {
+    console.log(urls);
+    urls.forEach(function(url) {
+      $('<li></li>').text(url).appendTo('ul#dreams');
     });
   });
 
