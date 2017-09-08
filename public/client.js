@@ -9,9 +9,11 @@ $(function() {
   
   $.get('/urls', function(urls) {
     console.log(urls);
-    $.each(urls, function(url) {
-      let pth = url.path;
-      $('<li></li>').text(pth).appendTo('ul#dreams');
+    $.each(urls, function(i, value) {
+      let url = urls[i];
+      let pth = url["path"];
+      let qID = url["quickID"];
+      $('<li></li>').text(qID + " - " +pth).appendTo('ul#dreams');
     });
   });
 
