@@ -90,16 +90,16 @@ mongo.connect("mongodb://gunnja:gunnja@ds123124.mlab.com:23124/fccmongo",(err, d
 
 // Get new urls
 app.get(/^\/(http\:\/\/|https\:\/\/).+/, function (req, res) {
+  let urlPath = req.path.substring(1);
   handler(collect, req, {
-    path : { $eq: req.path }
+    path : { $eq: urlPath }
   })
 })
 
 app.get("/urls", function(req, res) {
   let promRetr = new Promise(function (resolve, reject) {
-    let urls = [];
     finder(collect,{}).toArray(function (err,data) {
-      urls.push(data);
+      let urls = data;
       resolve(urls);
     });
   }).then(function(urls) {
