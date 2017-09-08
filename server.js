@@ -83,7 +83,7 @@ app.get("/", function (request, response) {
 mongo.connect("mongodb://gunnja:gunnja@ds123124.mlab.com:23124/fccmongo",(err, db) => {
   if (err) throw err
   else console.log("db connection successful")
-  collect = db.collection('CollURL');
+  collect = db.collection('collURL');
   database = db;
 // db.close();
 });
