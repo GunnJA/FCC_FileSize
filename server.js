@@ -28,7 +28,7 @@ function dbFind(collection,id,res) {
   promFind.then(function(path) {
         console.log("path",path);
         if (path) {
-          res.redirect(path.substring(1));
+          res.redirect(path);
           database.close;
         } else {
         console.log("getPath:", "error")
@@ -91,7 +91,7 @@ mongo.connect("mongodb://gunnja:gunnja@ds123124.mlab.com:23124/fccmongo",(err, d
 // Get new urls
 app.get(/^\/(http\:\/\/|https\:\/\/).+/, function (req, res) {
   let urlPath = req.path.substring(1);
-  handler(collect, req, {
+  handler(collect, req,{
     path : { $eq: urlPath }
   })
 })
