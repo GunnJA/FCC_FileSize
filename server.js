@@ -94,6 +94,14 @@ app.get(/^\/(http\:\/\/|https\:\/\/).+/, function (req, res) {
     path : { $eq: req.path }
   })
 })
+
+app.get("/urls", function(req, res) {
+  let urls = 
+  finder(collect,{}).toArray(function (err,data) {
+    return data
+  }
+  
+})
   
 // Redirect existing shortened urls
 app.get(/\d+/, function (req, res) {
