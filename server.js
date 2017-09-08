@@ -60,7 +60,7 @@ function handler(collection, req, queryObj) {
 			resolve(finder(collection, queryObj).count())
 		});
 		promURL.then(function(count) {
-			let obj = {'quickID' : count, 'path' : req.path};
+			let obj = {'quickID' : count, 'path' : req.path.substring(1)};
 			console.log("createObj",obj);
 			return obj;
 		}).then(function(collection, obj) {
@@ -83,16 +83,15 @@ app.get("/", function (request, response) {
 mongo.connect("mongodb://gunnja:gunnja@ds123124.mlab.com:23124/fccmongo",(err, db) => {
   if (err) throw err
   else console.log("db connection successful")
-  collect = db.collection('myColl');
+  collect = db.collection('CollURL');
   database = db;
 // db.close();
 });
 
 // Get new urls
 app.get(/^\/(http\:\/\/|https\:\/\/).+/, function (req, res) {
-  let urlPath = req.path.substring(1);
-  handler(collect, req,{
-    path : { $eq: urlPath }
+  handler(collect, req, {
+    path : { $eq: req.path.substring(1) }
   })
 })
 
@@ -109,7 +108,7 @@ app.get("/urls", function(req, res) {
   
 // Redirect existing shortened urls
 app.get(/\d+/, function (req, res) {
-  dbFind(collect,req.path,res)
+  dbFind(collect,req.path.substring(1),res)
 })
 
 // listen for requests :)
