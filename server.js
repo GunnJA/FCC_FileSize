@@ -41,6 +41,20 @@ function dbFind(collection,id,res) {
     });
 }
 
+let promDigit = new Promise(function(resolve, reject) {
+			resolve(finder(collection, queryObj).count());
+		});
+
+function exists() {
+  
+  
+}
+
+function assignID() {
+  
+  
+}
+
 
 function handler(collection, req, queryObj) {
 	if (queryObj != {}) {
@@ -58,9 +72,10 @@ function handler(collection, req, queryObj) {
 		});
 	} else {
 		let promURL = new Promise(function(resolve, reject) {
-			resolve(finder(collection, queryObj).count())
+			resolve(finder(collection, queryObj).count());
 		});
 		promURL.then(function(count) {
+      console.log("path", req.path.substring(1))
 			let obj = {'quickID' : count, 'path' : req.path.substring(1)};
 			console.log("createObj",obj);
 			return obj;
