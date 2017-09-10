@@ -11,12 +11,14 @@ let collect;
 
 
 // functions
-function dbInsert(collection,data) {
-  collection.insert(data, function(err, data) {
+function dbInsert(collection,obj) {
+  console.log("coll:",collection);
+  collection.insert(obj, function(err, data) {
     if (err) throw err
+    console.log(data);
+    database.close;
   })
 }
-
 
 function finder(collection, queryObj) {
     return collection.find(queryObj);
@@ -62,20 +64,16 @@ function exists(collection, req, queryObj) {
 }
 
 function assignID(collection, req, queryObj) {
-  return new Promise(function(resolve, reject) {
-    promQuery(collection, queryObj).then(function(count) {
-        console.log("path", req.path.substring(1))
-        let obj = {'quickID' : count, 'path' : req.path.substring(1)};
-        console.log("createObj",obj);
-        return obj;
-      }).then(function(collection, obj) {
-        console.log("new entry");
-        dbInsert(collection, obj);
-        database.close;
-      });
-  }
-                     })
-
+  promQuery(collection, queryObj).then(function(count) {
+      console.log("path", req.path.substring(1))
+      let obj = {'quickID' : count, 'path' : req.path.substring(1)};
+      console.log("createObj",obj);
+      return obj;
+  }).then(function(obj) {
+      console.log("new entry");
+      dbInsert(collection, obj);
+    });
+}
 
 // http://expressjs.com/en/starter/static-files.html
 app.use(express.static('public'));
