@@ -62,19 +62,19 @@ function exists(collection, req, queryObj) {
 }
 
 function assignID(collection, req, queryObj) {
-  promQuery(collection, queryObj).then(function(count) {
-      console.log("path", req.path.substring(1))
-			let obj = {'quickID' : count, 'path' : req.path.substring(1)};
-			console.log("createObj",obj);
-			return obj;
-		}).then(function(collection, obj) {
-			console.log("new entry");
-			dbInsert(collection, obj);
-			database.close;
-		});
-}
-
-
+  return new Promise(function(resolve, reject) {
+    promQuery(collection, queryObj).then(function(count) {
+        console.log("path", req.path.substring(1))
+        let obj = {'quickID' : count, 'path' : req.path.substring(1)};
+        console.log("createObj",obj);
+        return obj;
+      }).then(function(collection, obj) {
+        console.log("new entry");
+        dbInsert(collection, obj);
+        database.close;
+      });
+  }
+                     })
 
 
 // http://expressjs.com/en/starter/static-files.html
