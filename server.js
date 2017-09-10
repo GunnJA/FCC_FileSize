@@ -24,10 +24,8 @@ function finder(collection, queryObj) {
 
 function dbFind(collection,id,res) {
   let promFind = new Promise(function(resolve, reject) {
-    console.log("finder",finder(collection,{}));
     collection.findOne({ 'quickID' : { $eq: parseInt(id) }}, function(err, item) {
       if (err) throw err;
-      console.log("item",item);
       resolve(item.path);
     });
   })
