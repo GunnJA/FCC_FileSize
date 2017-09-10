@@ -12,10 +12,8 @@ let collect;
 
 // functions
 function dbInsert(collection,obj) {
-  console.log("coll:",collection);
   collection.insert(obj, function(err, data) {
     if (err) throw err
-    console.log(data);
     database.close;
   })
 }
