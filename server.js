@@ -25,8 +25,13 @@ function finder(collection, queryObj) {
 function dbFind(collection,id,res) {
   let promFind = new Promise(function(resolve, reject) {
     collection.findOne({ 'quickID' : { $eq: parseInt(id) }}, function(err, item) {
-      if (err) throw err;
+      if (err) {
+        throw err;
+      } else if (item === null) {
+         res.send({"error": "ID doesn't exist"});
+      } else {
       resolve(item.path);
+      }
     });
   })
   promFind.then(function(path) {
@@ -35,7 +40,6 @@ function dbFind(collection,id,res) {
           res.redirect(path);
           database.close;
         } else {
-        console.log("getPath:", "error")
           database.close;
         }
     });
@@ -47,12 +51,13 @@ function promQuery(collection, queryObj) {
 		});
 }
 
-function exists(collection, req, queryObj) {
+function exists(collection, req, res, queryObj) {
   return new Promise(function(resolve, reject) {
     promQuery(collection, queryObj).then(function(count) {
         console.log("dbExists:",count);
         if (count > 0) {
-          reject(Error("already exists"));
+          reject(Error("already exists"))
+          res.send({"error": "already exists"});
           database.close;
         } else {
           resolve(assignID(collection, req, {}));
@@ -91,7 +96,7 @@ mongo.connect("mongodb://gunnja:gunnja@ds131854.mlab.com:31854/fccdb",(err, db) 
 
 // Get new urls
 app.get(/^\/(http\:\/\/|https\:\/\/).+/, function (req, res) {
-  exists(collect, req, {
+  exists(collect, req, res, {
     path : { $eq: req.path.substring(1) }
   })
 })
