@@ -47,19 +47,21 @@ function promQuery(collection, queryObj) {
 		});
 }
 
-function exists(collection, queryObj, req) {
-  promQuery(collection, queryObj).then(function(count) {
-			console.log("dbExists:",count);
-			if (count > 0) {
-				console.log("already exists");
-				database.close;
-			} else {
-				return assignID(collection, req, {})
-			}
+function exists(collection, req, queryObj) {
+  return new Promise(function(resolve, reject) {
+    promQuery(collection, queryObj).then(function(count) {
+        console.log("dbExists:",count);
+        if (count > 0) {
+          reject(Error("already exists"));
+          database.close;
+        } else {
+          resolve(assignID(collection, req, {}));
+        }
+    })
   })
 }
 
-function assignID(collection, queryObj, req) {
+function assignID(collection, req, queryObj) {
   promQuery(collection, queryObj).then(function(count) {
       console.log("path", req.path.substring(1))
 			let obj = {'quickID' : count, 'path' : req.path.substring(1)};
@@ -68,7 +70,6 @@ function assignID(collection, queryObj, req) {
 		}).then(function(collection, obj) {
 			console.log("new entry");
 			dbInsert(collection, obj);
-			console.log(obj);
 			database.close;
 		});
 }
