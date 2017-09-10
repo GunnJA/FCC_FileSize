@@ -80,10 +80,10 @@ app.get("/", function (request, response) {
   response.sendFile(__dirname + '/views/index.html');
 });
 
-mongo.connect("mongodb://gunnja:gunnja@ds123124.mlab.com:23124/fccmongo",(err, db) => {
+mongo.connect("mongodb://gunnja:gunnja@ds131854.mlab.com:31854/fccdb",(err, db) => {
   if (err) throw err
   else console.log("db connection successful")
-  collect = db.collection('collURL');
+  collect = db.collection('fcccoll');
   database = db;
 // db.close();
 });
