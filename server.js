@@ -11,10 +11,11 @@ let collect;
 
 
 // functions
-function dbInsert(collection,obj) {
+function dbInsert(collection,obj,res) {
   collection.insert(obj, function(err, data) {
     if (err) throw err
     database.close;
+    res.send(obj);
   })
 }
 
@@ -60,13 +61,13 @@ function exists(collection, req, res, queryObj) {
           res.send({"error": "already exists"});
           database.close;
         } else {
-          resolve(assignID(collection, req, {}));
+          resolve(assignID(collection, req, res, {}));
         }
     })
   })
 }
 
-function assignID(collection, req, queryObj) {
+function assignID(collection, req, res, queryObj) {
   promQuery(collection, queryObj).then(function(count) {
       console.log("path", req.path.substring(1))
       let obj = {'quickID' : count, 'path' : req.path.substring(1)};
@@ -74,7 +75,7 @@ function assignID(collection, req, queryObj) {
       return obj;
   }).then(function(obj) {
       console.log("new entry");
-      dbInsert(collection, obj);
+      dbInsert(collection, obj, res);
     });
 }
 
