@@ -41,40 +41,26 @@ function dbFind(collection,id,res) {
     });
 }
 
-let promDigit = new Promise(function(resolve, reject) {
+function promQuery(collection, queryObj) {
+  return new Promise(function(resolve, reject) {
 			resolve(finder(collection, queryObj).count());
 		});
-
-function exists() {
-  
-  
 }
 
-function assignID() {
-  
-  
-}
-
-
-function handler(collection, req, queryObj) {
-	if (queryObj != {}) {
-		let promDigit = new Promise(function(resolve, reject) {
-			resolve(finder(collection, queryObj).count());
-		});
-		promDigit.then(function(count) {
+function exists(collection, queryObj, req) {
+  promQuery(collection, queryObj).then(function(count) {
 			console.log("dbExists:",count);
 			if (count > 0) {
 				console.log("already exists");
 				database.close;
 			} else {
-				return handler(collection, req, {})
+				return assignID(collection, req, {})
 			}
-		});
-	} else {
-		let promURL = new Promise(function(resolve, reject) {
-			resolve(finder(collection, queryObj).count());
-		});
-		promURL.then(function(count) {
+  })
+}
+
+function assignID(collection, queryObj, req) {
+  promQuery(collection, queryObj).then(function(count) {
       console.log("path", req.path.substring(1))
 			let obj = {'quickID' : count, 'path' : req.path.substring(1)};
 			console.log("createObj",obj);
@@ -85,8 +71,10 @@ function handler(collection, req, queryObj) {
 			console.log(obj);
 			database.close;
 		});
-	}
 }
+
+
+
 
 // http://expressjs.com/en/starter/static-files.html
 app.use(express.static('public'));
@@ -106,7 +94,7 @@ mongo.connect("mongodb://gunnja:gunnja@ds131854.mlab.com:31854/fccdb",(err, db) 
 
 // Get new urls
 app.get(/^\/(http\:\/\/|https\:\/\/).+/, function (req, res) {
-  handler(collect, req, {
+  exists(collect, req, {
     path : { $eq: req.path.substring(1) }
   })
 })
