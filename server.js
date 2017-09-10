@@ -15,7 +15,7 @@ function dbInsert(collection,obj,res) {
   collection.insert(obj, function(err, data) {
     if (err) throw err
     database.close;
-    res.send(obj);
+    res.send({"Shortened URL": "https://urlshortener-10.glitch.me/" + obj.quickID});
   })
 }
 
