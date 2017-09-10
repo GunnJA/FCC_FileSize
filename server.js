@@ -25,9 +25,9 @@ function finder(collection, queryObj) {
 function dbFind(collection,id,res) {
   let promFind = new Promise(function(resolve, reject) {
     console.log("finder",finder(collection,{}));
-    collection.findOne({ 'quickID' : { $eq: id }}, function(err, item) {
+    collection.findOne({ 'quickID' : { $eq: parseInt(id) }}, function(err, item) {
       if (err) throw err;
-      consol
+      console.log("item",item);
       resolve(item.path);
     });
   })
@@ -111,12 +111,11 @@ app.get("/urls", function(req, res) {
   
 // Redirect existing shortened urls
 app.get(/\d+/, function (req, res) {
-  console.log(req.path.substring(1));
-  dbFind(collect,req.path.substring(1),res)
+  let id = req.path.substring(1);
+  dbFind(collect,id,res)
 })
 
 // listen for requests :)
 var listener = app.listen(process.env.PORT, function () {
   console.log('Your app is listening on port ' + listener.address().port);
 });
-
