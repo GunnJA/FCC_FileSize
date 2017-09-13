@@ -9,14 +9,14 @@ const app = express();
 const http = require('http');
 const mongo = require('mongodb').MongoClient
 const url = require('url');
-const APIurl = "https://www.googleapis.com/customsearch/v1?"
+const APIurl = "googleapis.com";
 const dbCollection = "fccsearch";
 let database;
 let collect;
 
 let options = {
-  hostname: 'www.googleapis.com',
-  port: 80,
+  hostname: APIurl,
+  port: 8080,
   path: '/customsearch/v1?cx=015452621321954620393:qo5wx60lbq0&q=dog&key=AIzaSyCRzwpBjrvOl-3mWeJRQLUcNwoSoioo3bw',
   method: 'GET'
 }
@@ -33,7 +33,12 @@ const req = http.request(options, (res) => {
   });
 });
 
-req;
+req.on('error', (e) => {
+  console.error(`problem with request: ${e.message}`);
+});
+
+//req.write(postData);
+req.end();
 
 // http://expressjs.com/en/starter/static-files.html
 app.use(express.static('public'));
