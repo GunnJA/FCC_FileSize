@@ -14,10 +14,24 @@ const dbCollection = "fccsearch";
 let database;
 let collect;
 
+var google = require('googleapis');
+var customsearch = google.customsearch('v1');
+
+customsearch.cse.list({ cx: cx, q: "dogs", auth: key }, function (err, resp) {
+  if (err) {
+    return console.log('An error occured', err);
+  }
+  // Got the response from custom search
+  console.log('Result: ' + resp.searchInformation.formattedTotalResults);
+  if (resp.items && resp.items.length > 0) {
+    console.log('First result name is ' + resp.items[0].title);
+  }
+});
+
 let options = {
   hostname: APIurl,
   port: 8080,
-  path: '/customsearch/v1?cx=015452621321954620393:qo5wx60lbq0&q=dog&key=AIzaSyCRzwpBjrvOl-3mWeJRQLUcNwoSoioo3bw',
+  path: '/customsearch/v1?q=%22stars%22&cx=015452621321954620393%3Aqo5wx60lbq0&key=',
   method: 'GET'
 }
 
