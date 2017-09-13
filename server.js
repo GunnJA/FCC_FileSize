@@ -6,10 +6,8 @@ const key = process.env.KEY;
 const cx = process.env.CX;
 const express = require('express');
 const app = express();
-const http = require('http');
 const mongo = require('mongodb').MongoClient
 const url = require('url');
-const APIurl = "https://www.googleapis.com";
 const dbCollection = "fccsearch";
 let database;
 let collect;
@@ -47,11 +45,9 @@ mongo.connect("mongodb://gunnja:gunnja@ds131854.mlab.com:31854/fccdb",(err, db) 
 
 // Get new urls
 app.get(/^\/search\/.+/, function (req, res) {
-  let searchQ = req._parsedUrl.Url.pathame.split("/");
-  console.log(req);
-  console.log(searchQ[2]);
-  let offsetStr = req._parsedUrl.Url.query.split("=")
-  let offset = offsetStr[1].parseInt();
+  let searchQ = (req.path.split("/"))[2];
+  let offset = req.query.offset;
+  console.log(searchQ);
   console.log(offset);
 })
 
