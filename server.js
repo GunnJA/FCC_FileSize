@@ -47,8 +47,12 @@ mongo.connect("mongodb://gunnja:gunnja@ds131854.mlab.com:31854/fccdb",(err, db) 
 
 // Get new urls
 app.get(/^\/search\/.+/, function (req, res) {
-  let searchQ = req.path.split("/");
-  searchQ[2];
+  let searchQ = req._parsedUrl.Url.pathame.split("/");
+  console.log(req);
+  console.log(searchQ[2]);
+  let offsetStr = req._parsedUrl.Url.query.split("=")
+  let offset = offsetStr[1].parseInt();
+  console.log(offset);
 })
 
 app.get("/urls", function(req, res) {
