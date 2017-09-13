@@ -2,6 +2,7 @@
 // where your node app starts
 
 // init project
+const key = process.env.KEY;
 const express = require('express');
 const app = express();
 const mongo = require('mongodb').MongoClient
