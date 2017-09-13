@@ -46,6 +46,11 @@ mongo.connect("mongodb://gunnja:gunnja@ds131854.mlab.com:31854/fccdb",(err, db) 
 // Get new urls
 app.get(/^\/search\/.+/, function (req, res) {
   let searchQ = (req.path.split("/"))[2];
+  console.log("no offset",searchQ);
+})
+
+app.get(/^\/search\/.+\?/, function (req, res) {
+  let searchQ = (req.path.split("/"))[2];
   let offset = req.query.offset;
   console.log(searchQ);
   console.log(offset);
