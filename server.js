@@ -7,9 +7,10 @@ const express = require('express');
 const app = express();
 const mongo = require('mongodb').MongoClient
 const url = require('url');
+const APIurl = "https://www.googleapis.com/customsearch/v1?"
+const dbCollection = "fccsearch";
 let database;
 let collect;
-
 
 // functions
 function dbInsert(collection,obj,res) {
@@ -91,7 +92,7 @@ app.get("/", function (request, response) {
 mongo.connect("mongodb://gunnja:gunnja@ds131854.mlab.com:31854/fccdb",(err, db) => {
   if (err) throw err
   else console.log("db connection successful")
-  collect = db.collection('fcccoll');
+  collect = db.collection(dbCollection);
   database = db;
 // db.close();
 });
