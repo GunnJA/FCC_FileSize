@@ -17,16 +17,15 @@ let collect;
 var google = require('googleapis');
 var customsearch = google.customsearch('v1');
 
-customsearch.cse.list({ cx: cx, q: "dogs", auth: key }, function (err, resp) {
+function imageSearch() customsearch.cse.list({ cx: cx, q: "dogs", auth: key, searchType: "image", num: 10 }, function (err, resp) {
   if (err) {
     return console.log('An error occured', err);
   }
   // Got the response from custom search
   console.log('Result: ' + resp.searchInformation.formattedTotalResults);
-  if (resp.items && resp.items.length > 0) {
-    console.log('First result name is ' + resp.items[0].title);
-  }
+  console.log(resp);
 });
+}
 
 let options = {
   hostname: APIurl,
