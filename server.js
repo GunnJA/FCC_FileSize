@@ -9,7 +9,7 @@ const app = express();
 const http = require('http');
 const mongo = require('mongodb').MongoClient
 const url = require('url');
-const APIurl = "googleapis.com";
+const APIurl = "googleapis.com/customsearch/v1?";
 const dbCollection = "fccsearch";
 let database;
 let collect;
@@ -17,7 +17,7 @@ let collect;
 let options = {
   hostname: APIurl,
   port: 8080,
-  path: '/customsearch/v1?cx=015452621321954620393:qo5wx60lbq0&q=dog&key=AIzaSyCRzwpBjrvOl-3mWeJRQLUcNwoSoioo3bw',
+  path: 'cx=015452621321954620393:qo5wx60lbq0&q=dog&key=AIzaSyCRzwpBjrvOl-3mWeJRQLUcNwoSoioo3bw',
   method: 'GET'
 }
 
