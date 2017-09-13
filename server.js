@@ -43,17 +43,15 @@ mongo.connect("mongodb://gunnja:gunnja@ds131854.mlab.com:31854/fccdb",(err, db) 
 // db.close();
 });
 
-// Get new urls
-app.get(/^\/search\/[^\?]+$/, function (req, res) {
-  let searchQ = (req.path.split("/"))[2];
-  console.log("no offset",searchQ);
-});
 
-app.get(/^\/search\/.+\?offset=\d+/, function (req, res) {
-  let searchQ = (req.path.split("/"))[2];
-  let offset = req.query.offset;
-  console.log(searchQ);
-  console.log(offset);
+app.get("/search/:query", function (req, res) {
+  const searchQ = req.params.query;
+  if (req.query.offset) {
+    console.log("offset", req.query.offset);
+        console.log("searchQ", searchQ);
+  }else {
+    console.log("no offset", searchQ);
+  }
 });
 
 app.get("/urls", function(req, res) {
