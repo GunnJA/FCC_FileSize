@@ -20,15 +20,18 @@ $(function() {
 });
 
 const $searchInput = $("#searchInput");
+const $offsetInput = $("#offsetInput");
 const $searchButton = $("#searchButton");
 const $recentButton = $("#recentButton");
+const $main = $("main");
 
 $searchButton.on("click",function(event) {
   event.preventDefault();
   let query = $searchInput.val();
-  $.get(`/search/${query}`, function(data) {
+  $.get(`/search/${query}?offset=${$offsetInput.val()}`, function(data) {
+    $main.empty();
     $.each(data, function(i, value) {
-      $("main").append(`<li><a href="${value.link}">${value.htmlTitle}</li>`);    
+      $main.append(`<li><a href="${value.link}">${value.htmlTitle}</li>`);    
     });
   });
 });
@@ -36,8 +39,9 @@ $searchButton.on("click",function(event) {
 $recentButton.on("click",function(event) {
   event.preventDefault();
   $.get('/recent', function(data) {
+    $main.empty();
     $.each(data, function(i, value) {
-      $("main").append(`<li>${value.query}</li>`);    
+      $main.prepend(`<li>${value.query}</li>`);    
     });
   });
 });
