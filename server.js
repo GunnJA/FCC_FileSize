@@ -57,12 +57,10 @@ function dbInsert(collection,obj) {
 
 function finder(collection) {
   return new Promise(function(resolve,reject) {
-    try {
-      collection.find({}));if (err) throw err
-    
-    
-  })
-    return 
+    let results = collection.find({});
+    console.log(results);
+    resolve(results);
+  });
 }
 
 app.get("/search/:query", function (req, res) {
@@ -83,8 +81,9 @@ app.get("/search/:query", function (req, res) {
 });
 
 app.get("/recent", function (req, res) {
-
-
+  finder(collect).then(function(results) {
+    res.send(results);
+  })
 });
   
 // Redirect existing shortened urls
