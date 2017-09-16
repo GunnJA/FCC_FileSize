@@ -40,8 +40,11 @@ $recentButton.on("click",function(event) {
   event.preventDefault();
   $.get('/recent', function(data) {
     $main.empty();
-    $.each(data, function(i, value) {
-      $main.prepend(`<li>${value.query}</li>`);    
-    });
+    let len = data.length;
+    console.log(data.length);
+    for (let i = (len - 10); i < len; i += 1) {
+      let value = data[i];
+      $main.prepend(`<li>${value.query}</li>`);
+    }
   });
 });
