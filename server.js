@@ -18,13 +18,15 @@ var customsearch = google.customsearch('v1');
 
 // Function to search google images
 function imageSearch(q,num) {
-  customsearch.cse.list({ cx: cx, q: q, auth: key, searchType: "image", num: num }, function (err, resp) {
-    if (err) {
-      return console.log('An error occured', err);
-    }
-    // Got the response from custom search
-    console.log('Result: ' + resp.searchInformation.formattedTotalResults);
-    console.log(resp);
+  return new Promise(function (resolve, reject) {
+    customsearch.cse.list({ cx: cx, q: q, auth: key, searchType: "image", num: num }, function (err, resp) {
+      if (err) {
+        return console.log('An error occured', err);
+      }
+      // Got the response from custom search
+      console.log('Result: ' + resp.searchInformation.formattedTotalResults);
+      resolve(resp);
+    });
   });
 }
 
@@ -58,10 +60,10 @@ app.get("/search/:query", function (req, res) {
   if (req.query.offset) {
     console.log("offset", req.query.offset);
     console.log("searchQ", searchQ);
-    imageSearch(searchQ,req.query.offset);
+    res.send((imageSearch(searchQ,req.query.offset)).items);
   }else {
     console.log("no offset", searchQ);
-    imageSearch(searchQ,offsetDefault);
+    res.send((imageSearch(searchQ,offsetDefault)).items);
   }
 });
 
