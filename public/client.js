@@ -24,6 +24,12 @@ const $searchButton = $("#searchButton");
 
 $searchButton.on("click",function(event) {
   event.preventDefault();
-  console.log($searchInput.val());
-  $.get('/urls', function(urls) {
+  let query = $searchInput.val();
+  $.get(`/search/${query}`, function(data) {
+    $.each(data, function(i, value) {
+      value.
+        
+    }) {
+      
+  });
 });
