@@ -80,8 +80,15 @@ app.get("/search/:query", function (req, res) {
   }
 });
 
+
 app.get("/recent", function (req, res) {
-  finder(collect).then(function(results) {
+  let promRetr = new Promise(function (resolve, reject) {
+    finder(collect).toArray(function (err,data) {
+      let recent = data;
+      resolve(data);
+    })
+  })
+  promRetr.then(function(results) {
     res.send(results);
   })
 });
