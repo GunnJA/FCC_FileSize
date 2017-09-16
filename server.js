@@ -7,7 +7,7 @@ const cx = process.env.CX;
 const mongoURL = process.env.MURL;
 const express = require('express');
 const app = express();
-const mongo = require('mongodb').MongoClient;
+const mongo = require('mongodb').MongoClient
 const dbCollection = "fccsearch";
 let offsetDefault = 10;
 let database;
@@ -39,7 +39,7 @@ app.get("/", function (request, response) {
 });
 
 //DB functions
-mongo.connect(mongoURL,(err, db) => {
+mongo.connect('mongodb://gunnja:gunnja@ds131854.mlab.com:31854/fccdb',(err, db) => {
   if (err) throw err
   else console.log("db connection successful")
   collect = db.collection(dbCollection);
