@@ -51,7 +51,18 @@ function dbInsert(collection,obj) {
   collection.insert(obj, function(err, data) {
     if (err) throw err
     database.close;
+    console.log("insert complete");
   })
+}
+
+function finder(collection) {
+  return new Promise(function(resolve,reject) {
+    try {
+      collection.find({}));if (err) throw err
+    
+    
+  })
+    return 
 }
 
 app.get("/search/:query", function (req, res) {
@@ -71,7 +82,8 @@ app.get("/search/:query", function (req, res) {
   }
 });
 
-app.get("/urls", function(req, res) {
+app.get("/recent", function (req, res) {
+
 
 });
   
