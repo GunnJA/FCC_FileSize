@@ -9,7 +9,7 @@ const app = express();
 const mongo = require('mongodb').MongoClient
 const url = require('url');
 const dbCollection = "fccsearch";
-
+let offsetDefault = 10;
 let database;
 let collect;
 
@@ -36,6 +36,7 @@ app.get("/", function (request, response) {
   response.sendFile(__dirname + '/views/index.html');
 });
 
+//DB functions
 mongo.connect("mongodb://gunnja:gunnja@ds131854.mlab.com:31854/fccdb",(err, db) => {
   if (err) throw err
   else console.log("db connection successful")
@@ -44,14 +45,23 @@ mongo.connect("mongodb://gunnja:gunnja@ds131854.mlab.com:31854/fccdb",(err, db) 
 // db.close();
 });
 
+function dbInsert(collection,obj,res) {
+  collection.insert(obj, function(err, data) {
+    if (err) throw err
+    database.close;
+    res.send({"Shortened URL": "https://urlshortener-10.glitch.me/" + obj.quickID});
+  })
+}
 
 app.get("/search/:query", function (req, res) {
   const searchQ = req.params.query;
   if (req.query.offset) {
     console.log("offset", req.query.offset);
-        console.log("searchQ", searchQ);
+    console.log("searchQ", searchQ);
+    imageSearch(searchQ,req.query.offset);
   }else {
     console.log("no offset", searchQ);
+    imageSearch(searchQ,offsetDefault);
   }
 });
 
