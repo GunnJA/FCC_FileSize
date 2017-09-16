@@ -47,23 +47,27 @@ mongo.connect("mongodb://gunnja:gunnja@ds131854.mlab.com:31854/fccdb",(err, db) 
 // db.close();
 });
 
-function dbInsert(collection,obj,res) {
+function dbInsert(collection,obj) {
   collection.insert(obj, function(err, data) {
     if (err) throw err
     database.close;
-    res.send({"Shortened URL": "https://urlshortener-10.glitch.me/" + obj.quickID});
   })
 }
 
 app.get("/search/:query", function (req, res) {
   const searchQ = req.params.query;
+  dbInsert(collect,{ "query": searchQ })
   if (req.query.offset) {
     console.log("offset", req.query.offset);
     console.log("searchQ", searchQ);
-    res.send((imageSearch(searchQ,req.query.offset)).items);
+    imageSearch(searchQ,req.query.offset).then(function(data) {
+      res.send(data.items);
+    });
   }else {
     console.log("no offset", searchQ);
-    res.send((imageSearch(searchQ,offsetDefault)).items);
+    imageSearch(searchQ,offsetDefault).then(function(data) {
+      res.send(data.items);
+    });
   }
 });
 
