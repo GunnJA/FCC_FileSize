@@ -4,10 +4,10 @@
 // init project
 const key = process.env.KEY;
 const cx = process.env.CX;
+const mongoURL = process.env.MURL;
 const express = require('express');
 const app = express();
-const mongo = require('mongodb').MongoClient
-const url = require('url');
+const mongo = require('mongodb').MongoClient;
 const dbCollection = "fccsearch";
 let offsetDefault = 10;
 let database;
@@ -16,7 +16,7 @@ let collect;
 var google = require('googleapis');
 var customsearch = google.customsearch('v1');
 
-// Function to search google images
+// Google Images API call
 function imageSearch(q,num) {
   return new Promise(function (resolve, reject) {
     customsearch.cse.list({ cx: cx, q: q, auth: key, searchType: "image", num: num }, function (err, resp) {
@@ -39,7 +39,7 @@ app.get("/", function (request, response) {
 });
 
 //DB functions
-mongo.connect("mongodb://gunnja:gunnja@ds131854.mlab.com:31854/fccdb",(err, db) => {
+mongo.connect(mongoURL,(err, db) => {
   if (err) throw err
   else console.log("db connection successful")
   collect = db.collection(dbCollection);
@@ -59,6 +59,7 @@ function finder(collection) {
   return collection.find({});
 }
 
+//Routing
 app.get("/search/:query", function (req, res) {
   const searchQ = req.params.query;
   dbInsert(collect,{ "query": searchQ })
@@ -76,7 +77,6 @@ app.get("/search/:query", function (req, res) {
   }
 });
 
-
 app.get("/recent", function (req, res) {
   let promRetr = new Promise(function (resolve, reject) {
     finder(collect).toArray(function (err,data) {
@@ -87,11 +87,6 @@ app.get("/recent", function (req, res) {
     res.send(data);
   })
 });
-  
-// Redirect existing shortened urls
-app.get(/\d+/, function (req, res) {
-
-})
 
 // listen for requests :)
 var listener = app.listen(process.env.PORT, function () {
