@@ -25,4 +25,5 @@ const $searchButton = $("#searchButton");
 $searchButton.on("click",function(event) {
   event.preventDefault();
   console.log($searchInput.val());
+  $.get('/urls', function(urls) {
 });
