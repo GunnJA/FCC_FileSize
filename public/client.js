@@ -24,5 +24,5 @@ const $searchButton = $("#searchButton");
 
 $searchButton.on("click",function(event) {
   event.preventDefault();
-  console.log($searchInput.value);
+  console.log($searchInput.val());
 });
