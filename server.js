@@ -56,11 +56,7 @@ function dbInsert(collection,obj) {
 }
 
 function finder(collection) {
-  return new Promise(function(resolve,reject) {
-    let results = collection.find({});
-    console.log(results);
-    resolve(results);
-  });
+  return collection.find({});
 }
 
 app.get("/search/:query", function (req, res) {
@@ -84,12 +80,11 @@ app.get("/search/:query", function (req, res) {
 app.get("/recent", function (req, res) {
   let promRetr = new Promise(function (resolve, reject) {
     finder(collect).toArray(function (err,data) {
-      let recent = data;
       resolve(data);
     })
   })
-  promRetr.then(function(results) {
-    res.send(results);
+  promRetr.then(function(data) {
+    res.send(data);
   })
 });
   
