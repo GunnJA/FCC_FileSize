@@ -21,15 +21,23 @@ $(function() {
 
 const $searchInput = $("#searchInput");
 const $searchButton = $("#searchButton");
+const $recentButton = $("#recentButton");
 
 $searchButton.on("click",function(event) {
   event.preventDefault();
   let query = $searchInput.val();
   $.get(`/search/${query}`, function(data) {
     $.each(data, function(i, value) {
-      value.
-        
-    }) {
-      
+      $("main").append(`<li><a href="${value.link}">${value.htmlTitle}</li>`);    
+    });
+  });
+});
+
+$recentButton.on("click",function(event) {
+  event.preventDefault();
+  $.get('/recent', function(data) {
+    $.each(data, function(i, value) {
+      $("main").append(`<li>${value.query}</li>`);    
+    });
   });
 });
