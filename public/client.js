@@ -19,5 +19,10 @@ $(function() {
 
 });
 
-const $main = $("main p");
+const $searchInput = $("#searchInput");
+const $searchButton = $("#searchButton");
 
+$searchButton.on("click",function(event) {
+  event.preventDefault();
+  console.log($searchInput.value);
+});
