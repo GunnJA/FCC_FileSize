@@ -21,13 +21,12 @@ app.get("/", function (req, res) {
   res.sendFile(__dirname + '/views/index.html');
 });
 
+// to send file size
 app.post("/open_file", function (req, res) {
-  res.send({"size": req.headers.content-length
-           });
+  let size = parseInt(req.headers["content-length"]);
+  res.send({"size": size});
     //console.log(res);
 });
-
-
 
 
 // listen for requests :)
