@@ -22,7 +22,8 @@ app.get("/", function (req, res) {
 });
 
 app.post("/open_file", function (req, res) {
-  res.send({"size":req.headers.'content-length'});
+  res.send({"size": req.headers.content-length
+           });
     //console.log(res);
 });
 
