@@ -21,8 +21,9 @@ app.get("/", function (req, res) {
   res.sendFile(__dirname + '/views/index.html');
 });
 
-app.get("/open_file", function (req, res) {
-  console.log(req.body);
+app.post("/open_file", function (req, res) {
+  res.send({"size":req.headers.'content-length'});
+    //console.log(res);
 });
 
 
